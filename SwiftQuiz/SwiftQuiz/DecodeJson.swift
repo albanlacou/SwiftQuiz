@@ -9,7 +9,7 @@ import Foundation
 
 
 struct infoAPI : Decodable {
-    let coord : [String : Int]
+    let coord : [String : Double]
     let weather : [weather]
     let base : String
     let main : [String: Double]
@@ -17,8 +17,11 @@ struct infoAPI : Decodable {
     let wind : [String : Double]
     let clouds : [String : Int]
     let dt : Int
-    let sys : [sys]
+    let sys : sys
     let timezone : Int
+    let id : Int
+    let name : String
+    let cod : Int
 }
 
 struct weather : Decodable {

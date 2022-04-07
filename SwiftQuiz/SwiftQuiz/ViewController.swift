@@ -8,8 +8,9 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate  {
-    let ville = "Seattle"
+
+class ViewController: UIViewController, CLLocationManagerDelegate  {
+    let ville = "Paris"
     let defaults = UserDefaults.standard
     @IBOutlet weak var City: UILabel!
     
@@ -19,7 +20,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var maxTemp: UILabel!
     @IBOutlet var temperature: UILabel!
     
-    var models = [Weather]()
+    @IBAction func GOABOUT(_ sender: UIButton) {
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "about") as? AboutViewController{
+                   self.navigationController?.pushViewController(vc, animated: true)
+               }
+    }
     
     let locationManager = CLLocationManager()
     
@@ -33,7 +38,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
-        getInfosApi()
+        let test = getInfosApi(){
+            retour in
+            return retour
+            
+        }
+        
     }
     
     func setupLocation() {
@@ -81,48 +91,46 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
         
-        print("\(long) | \(lat)")
+        
     }
     
     // Table
-    
+
+
     func convertKelvinToDegrees(tempEnKelvin: Int)-> Int{
         return tempEnKelvin - 273
         
     }
     
+
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return models.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-    
+
     func createUrlApi(lat: Int = -1000, long: Int = -1000, city: String = "")->URL{
         var quoteUrl = URL(string: "")
-        if lat != -1000 && long != -1000 && city == ""{
+        if lat == -1000 && long == -1000 && city != ""{
             quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=\(ville)&appid=\(Constants.apiKey)" )!
-        }else if lat == -1000 && long == -1000 && city != ""{
+        }else if lat != -1000 && long != -1000 && city == ""{
             quoteUrl = URL(string: "\(Constants.apiBaseURL)?lat=\(lat)&long=\(long)&appid=\(Constants.apiKey)" )!
         }
+        print(quoteUrl!)
         return quoteUrl!
     }
     
-    func getInfosApi(){
-        
-        let lat: Int = 48
-        let lon: Int = 2
+    func getInfosApi(completionHandler: @escaping (_ retour: infoAPI) -> infoAPI){
         
         
-        var request = URLRequest(url: createUrlApi(city: ville))
+        
+        
+        var request = URLRequest(url: createUrlApi(city: self.ville))
         request.httpMethod = "GET"
         
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: request) { (data, response, error) in
+            
             if let data = data, error == nil {
                 
                 if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                    /*
                     if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers){
                         
                         if let data = json as? [String: AnyObject]{
@@ -161,7 +169,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             
                         }
                         
+                    }*/
+                    
+                    do{
+                        let jsonDeco = JSONDecoder()
+                        let decode = try jsonDeco.decode(infoAPI.self,from : data)
+                        completionHandler(decode)
+                    } catch{
+                        
+                        print(error)
+                        
                     }
+                    
+                    
                 }
                 
             }
@@ -173,7 +193,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         task.resume()
         
         
-    }}
+    }
+    
+}
 
 
 extension UIImageView {
