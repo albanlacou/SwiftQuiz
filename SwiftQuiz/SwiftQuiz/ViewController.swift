@@ -24,8 +24,8 @@ class ViewController: UIViewController {
         
         let lat: Int = 48
         let lon: Int = 2
-        
-        let quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=Paris&appid=\(Constants.apiKey)" )!
+        let ville = "Paris"
+        let quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=\(ville)&appid=\(Constants.apiKey)" )!
         var request = URLRequest(url: quoteUrl)
         request.httpMethod = "GET"
         
