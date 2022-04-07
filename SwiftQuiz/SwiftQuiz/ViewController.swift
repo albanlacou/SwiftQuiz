@@ -11,7 +11,9 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate  {
     let ville = "Paris"
+
     let defaults = UserDefaults.standard
+
     @IBOutlet weak var City: UILabel!
     
     @IBOutlet weak var weatherImage: UIImageView!
@@ -20,18 +22,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     @IBOutlet var maxTemp: UILabel!
     @IBOutlet var temperature: UILabel!
     
-    @IBAction func GOABOUT(_ sender: UIButton) {
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "about") as? AboutViewController{
-                   self.navigationController?.pushViewController(vc, animated: true)
-               }
-    }
-    
     let locationManager = CLLocationManager()
     
     var currentLocation: CLLocation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeFunc(gesture:)))
+        swipeRight.direction = .right
+        self.view.addGestureRecognizer(swipeRight)
+
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeFunc(gesture:)))
+        swipeLeft.direction = .left
+        self.view.addGestureRecognizer(swipeLeft)
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(swipeFunc(gesture:)))
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeFunc(gesture:)))
+        swipeUp.direction = .up
+        self.view.addGestureRecognizer(swipeUp)
+        
         City.text = ville
     }
     
@@ -44,6 +57,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
             
         }
         
+    }
+    
+    @objc func swipeFunc(gesture:UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            performSegue(withIdentifier: "Right", sender: self)
+        }
+        else if gesture.direction == .left {
+            performSegue(withIdentifier: "Left", sender: self)
+        }
+        else if gesture.direction == .up {
+            performSegue(withIdentifier: "Up", sender: self)
+        }
+        else if gesture.direction == .down {
+            performSegue(withIdentifier: "Down", sender: self)
+        }
     }
     
     func setupLocation() {
@@ -90,8 +118,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
-        
-        
+
     }
     
     // Table
@@ -210,8 +237,4 @@ extension UIImageView {
             }
         }
     }
-}
-
-struct Weather {
-    
 }
