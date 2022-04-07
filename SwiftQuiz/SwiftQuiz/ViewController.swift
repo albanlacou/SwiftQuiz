@@ -9,9 +9,15 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate  {
+    let ville = "Washington"
+    @IBOutlet weak var City: UILabel!
     
-    
+    @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet var table: UITableView!
+    @IBOutlet var minTemp: UILabel!
+    @IBOutlet var maxTemp: UILabel!
+    @IBOutlet var temperature: UILabel!
+    
     var models = [Weather]()
     
     let locationManager = CLLocationManager()
@@ -20,18 +26,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Register 2 cells
-      
-        table.register(WeatherTableViewCell.nib(), forCellReuseIdentifier: WeatherTableViewCell.identifier)
-        
-        table.delegate = self
-        table.dataSource = self
+        City.text = ville
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
+        getInfosApi()
     }
     
     func setupLocation() {
@@ -61,6 +62,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // Table
     
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
     }
@@ -72,7 +76,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let lat: Int = 48
         let lon: Int = 2
-        let ville = "Paris"
+        
         let quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=\(ville)&appid=\(Constants.apiKey)" )!
         var request = URLRequest(url: quoteUrl)
         request.httpMethod = "GET"
@@ -88,6 +92,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             let main = data["main"]
                             let tempEnKelvin = main!["temp"]!! as? Double
                             let tempEnDegrees = Int(tempEnKelvin!) - 273
+                            DispatchQueue.main.async {
+                                self.temperature.text = "\(tempEnDegrees)°C"
+                            }
+                            let tempEnKelvinMax = main!["temp_max"]!!
                             print(tempEnDegrees)
                             
                             
@@ -95,9 +103,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                 print(weather[0]["icon"]!)
                                 print("https://openweathermap.org/img/w/\(weather[0]["icon"]!).png")
                                 
-                                /*
-                                 self.weatherImageView.load(url: URL(string: "https://openweathermap.org/img/w/\(weather[0]["icon"]!).png")!)
-                                 }*/
+                                
+                                 self.weatherImage.load(url: URL(string: "https://openweathermap.org/img/w/\(weather[0]["icon"]!).png")!)
+                                 
                                 
                                 
                                 
