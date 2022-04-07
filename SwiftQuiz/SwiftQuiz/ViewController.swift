@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate  {
+class ViewController: UIViewController, CLLocationManagerDelegate  {
     let ville = "Washington"
     @IBOutlet weak var City: UILabel!
     
@@ -18,7 +18,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var maxTemp: UILabel!
     @IBOutlet var temperature: UILabel!
     
-    var models = [Weather]()
+    @IBAction func GOABOUT(_ sender: UIButton) {
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "about") as? AboutViewController{
+                   self.navigationController?.pushViewController(vc, animated: true)
+               }
+    }
     
     let locationManager = CLLocationManager()
     
@@ -63,11 +67,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Table
     
     
-    
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return models.count
-    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
