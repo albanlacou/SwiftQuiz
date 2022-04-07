@@ -7,17 +7,16 @@
 
 import UIKit
 
-class HourlyTableViewCell: UITableViewCell {
-
+class HourlyTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    @IBOutlet var collectionView: UICollectionView!
+        
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     static let identifier = "HourlyTableViewCell"
@@ -26,5 +25,14 @@ class HourlyTableViewCell: UITableViewCell {
         return UINib(nibName: "HourlyTableViewCell",
                      bundle: nil)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return
+    }
+
     
 }

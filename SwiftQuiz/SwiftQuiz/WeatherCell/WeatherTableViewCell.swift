@@ -8,16 +8,19 @@
 import UIKit
 
 class WeatherTableViewCell: UITableViewCell {
+    
+    @IBOutlet var dayLabel : UILabel!
+    @IBOutlet var highTempLabel : UILabel!
+    @IBOutlet var lowTempLabel : UILabel!
+    @IBOutlet var iconImageView : UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        backgroundColor = .gray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     static let identifier = "WeatherTableViewCell"
@@ -26,5 +29,6 @@ class WeatherTableViewCell: UITableViewCell {
         return UINib(nibName: "WeatherTableViewCell",
                      bundle: nil)
     }
+    
     
 }
