@@ -18,6 +18,7 @@
 		B5232E5427FB375000D9CE40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5232E5327FB375000D9CE40 /* Assets.xcassets */; };
 		B5232E5727FB375000D9CE40 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5232E5527FB375000D9CE40 /* LaunchScreen.storyboard */; };
 		B5232E6127FD761100D9CE40 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5232E6027FD761100D9CE40 /* Constants.swift */; };
+		B5232E6327FF282E00D9CE40 /* DecodeJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5232E6227FF282D00D9CE40 /* DecodeJson.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		B5232E5627FB375000D9CE40 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B5232E5827FB375000D9CE40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5232E6027FD761100D9CE40 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		B5232E6227FF282D00D9CE40 /* DecodeJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeJson.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				B5232E5327FB375000D9CE40 /* Assets.xcassets */,
 				B5232E5527FB375000D9CE40 /* LaunchScreen.storyboard */,
 				B5232E5827FB375000D9CE40 /* Info.plist */,
+				B5232E6227FF282D00D9CE40 /* DecodeJson.swift */,
 			);
 			path = SwiftQuiz;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				B5232E4F27FB374C00D9CE40 /* ViewController.swift in Sources */,
 				844BAAA227FF0D52008B3569 /* SearchViewController.swift in Sources */,
 				B5232E4B27FB374C00D9CE40 /* AppDelegate.swift in Sources */,
+				B5232E6327FF282E00D9CE40 /* DecodeJson.swift in Sources */,
 				B5232E4D27FB374C00D9CE40 /* SceneDelegate.swift in Sources */,
 				844BAA9D27FEF314008B3569 /* AboutViewController.swift in Sources */,
 				844BAAA027FF0D2F008B3569 /* FavouriteViewController.swift in Sources */,

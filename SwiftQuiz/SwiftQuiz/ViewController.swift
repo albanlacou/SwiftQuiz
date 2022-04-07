@@ -8,8 +8,12 @@
 import UIKit
 import CoreLocation
 
+
 class ViewController: UIViewController, CLLocationManagerDelegate  {
     let ville = "Paris"
+
+    let defaults = UserDefaults.standard
+
     @IBOutlet weak var City: UILabel!
     
     @IBOutlet weak var weatherImage: UIImageView!
@@ -47,7 +51,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
-        getInfosApi()
+        let test = getInfosApi(){
+            retour in
+            return retour
+            
+        }
+        
     }
     
     @objc func swipeFunc(gesture:UISwipeGestureRecognizer) {
@@ -79,6 +88,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         }
     }
     
+    func SetInFavoris(villeAMettreFavoris: String){
+        if var tabVilleEnregistrer = self.defaults.object(forKey: "VilleEnFavoris") as? Array<String> {
+            var i = 0
+            
+                for villesEnregistrer in tabVilleEnregistrer{
+                    i = i+1
+                    if villeAMettreFavoris == villesEnregistrer{
+                        tabVilleEnregistrer.remove(at: i)
+                    }else{
+                        tabVilleEnregistrer.append(villeAMettreFavoris)
+                    }
+                }
+            
+            self.defaults.set(tabVilleEnregistrer, forKey: "VilleEnFavoris")
+        }else{
+            var tab = [] as Array<String>
+            tab.append(villeAMettreFavoris)
+            self.defaults.set(tab, forKey: "VilleEnFavoris")
+        }
+        
+    }
+    
+    
     func requestWeatherForLocation() {
         guard let currentLocation = currentLocation else {
             return
@@ -86,40 +118,68 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
+
     }
     
     // Table
-    
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+
+
+    func convertKelvinToDegrees(tempEnKelvin: Int)-> Int{
+        return tempEnKelvin - 273
+        
     }
     
-    func getInfosApi(){
+
+    
+
+    func createUrlApi(lat: Int = -1000, long: Int = -1000, city: String = "")->URL{
+        var quoteUrl = URL(string: "")
+        if lat == -1000 && long == -1000 && city != ""{
+            quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=\(ville)&appid=\(Constants.apiKey)" )!
+        }else if lat != -1000 && long != -1000 && city == ""{
+            quoteUrl = URL(string: "\(Constants.apiBaseURL)?lat=\(lat)&long=\(long)&appid=\(Constants.apiKey)" )!
+        }
+        print(quoteUrl!)
+        return quoteUrl!
+    }
+    
+    func getInfosApi(completionHandler: @escaping (_ retour: infoAPI) -> infoAPI){
         
-        let lat: Int = 48
-        let lon: Int = 2
         
-        let quoteUrl = URL(string: "\(Constants.apiBaseURL)?q=\(ville)&appid=\(Constants.apiKey)" )!
-        var request = URLRequest(url: quoteUrl)
+        
+        
+        var request = URLRequest(url: createUrlApi(city: self.ville))
         request.httpMethod = "GET"
         
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: request) { (data, response, error) in
+            
             if let data = data, error == nil {
                 
                 if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                    /*
                     if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers){
                         
                         if let data = json as? [String: AnyObject]{
                             let main = data["main"]
                             let tempEnKelvin = main!["temp"]!! as? Double
-                            let tempEnDegrees = Int(tempEnKelvin!) - 273
+                            let tempEnDegrees = self.convertKelvinToDegrees(tempEnKelvin: Int(tempEnKelvin!))
                             DispatchQueue.main.async {
                                 self.temperature.text = "\(tempEnDegrees)°C"
                             }
-                            let tempEnKelvinMax = main!["temp_max"]!!
-                            print(tempEnDegrees)
+                            
+                            let tempEnKelvinMax = main!["temp_max"]!! as? Double
+                            let tempEnDegreesMax = self.convertKelvinToDegrees(tempEnKelvin: Int(tempEnKelvinMax!))
+                            DispatchQueue.main.async {
+                                self.maxTemp.text = "Min: \(tempEnDegreesMax)°C"
+                            }
+                            
+                            
+                            let tempEnKelvinMin = main!["temp_min"]!! as? Double
+                            let tempEnDegreesMin = self.convertKelvinToDegrees(tempEnKelvin: Int(tempEnKelvinMin!))
+                            DispatchQueue.main.async {
+                                self.minTemp.text = "Min: \(tempEnDegreesMin)°C"
+                            }
                             
                             
                             if let weather = data["weather"] as? [[String : AnyObject]]{
@@ -136,7 +196,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
                             
                         }
                         
+                    }*/
+                    
+                    do{
+                        let jsonDeco = JSONDecoder()
+                        let decode = try jsonDeco.decode(infoAPI.self,from : data)
+                        completionHandler(decode)
+                    } catch{
+                        
+                        print(error)
+                        
                     }
+                    
+                    
                 }
                 
             }
@@ -148,7 +220,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         task.resume()
         
         
-    }}
+    }
+    
+}
 
 
 extension UIImageView {
