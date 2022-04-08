@@ -51,11 +51,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
-        let test = getInfosApi(){
-            retour in
-            return retour
+        
+        var test:infoAPI?
+        
+        
+        getInfosApi(city : "Paris"){ retour in
+           test = retour
             
         }
+        
+        
         
     }
     
@@ -139,16 +144,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         }else if lat != -1000 && long != -1000 && city == ""{
             quoteUrl = URL(string: "\(Constants.apiBaseURL)?lat=\(lat)&long=\(long)&appid=\(Constants.apiKey)" )!
         }
-        print(quoteUrl!)
+        print("lat:\(lat) lat:\(long) city:\(city)")
         return quoteUrl!
     }
     
-    func getInfosApi(completionHandler: @escaping (_ retour: infoAPI) -> infoAPI){
+
+    
+    func getInfosApi(lat: Int = -1000, long: Int = -1000, city: String = "",completionHandler: @escaping (infoAPI) -> Void){
         
         
         
         
-        var request = URLRequest(url: createUrlApi(city: self.ville))
+        var request = URLRequest(url: createUrlApi(lat : lat,long: long, city:city))
         request.httpMethod = "GET"
         
         let session = URLSession(configuration: .default)
@@ -200,8 +207,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
                     
                     do{
                         let jsonDeco = JSONDecoder()
-                        let decode = try jsonDeco.decode(infoAPI.self,from : data)
-                        completionHandler(decode)
+                        let info = try jsonDeco.decode(infoAPI.self,from : data)
+                        
+                        completionHandler(info)
+                       
                     } catch{
                         
                         print(error)
